@@ -133,6 +133,19 @@ button.st{text-align:left;width:100%}button.st:hover{transform:translateY(-3px);
 .lgs{width:40px;height:40px;flex:none;filter:drop-shadow(0 4px 10px rgba(224,36,94,.35))}.lgs.big{width:58px;height:58px;margin-bottom:6px}
 @media(min-width:600px) and (max-width:899px){nav{left:50%;right:auto;transform:translateX(-50%);width:min(560px,calc(100% - 20px))}main{max-width:700px;margin:0 auto;width:100%}}
 .rl{margin:10px 0 0;padding-left:20px}.rl li{margin:7px 0;line-height:1.55}.card.rulec{border-color:color-mix(in srgb,var(--c) 35%,var(--bd))}
+
+.box.cbox{padding:0;overflow:hidden;display:flex;flex-direction:column;max-height:94vh;max-height:94dvh}
+.cbox .cmp{display:flex;flex-direction:column;min-height:0;flex:1}
+.cbox .cph{margin:0;padding:14px 18px 12px}.cbox .cph h3{font-size:19px}.cbox .cph p{font-size:12px}
+.cbody{flex:1;min-height:0;overflow-y:auto;padding:8px 18px 4px;-webkit-overflow-scrolling:touch}
+.cbox .lbl{margin:8px 0 5px;font-size:11px}
+.cbox .cmp textarea{min-height:92px;height:92px;padding:11px 13px;font-size:15px;resize:none}
+.cbox .cmp .cpk{gap:6px}.cbox .cmp .cpk .chip{padding:5px 10px;font-size:12px}
+.cbox .anon{margin:10px 0 6px;padding:8px 12px;gap:10px}.cbox .anon .ico{width:34px;height:34px;font-size:17px}.cbox .sw2 span{font-size:13px;line-height:1.3}
+.cbox .rule{margin:6px 0 4px;padding:8px 11px;font-size:12px;line-height:1.45}.cbox .rule .mu{font-size:11.5px}
+.cfoot{display:flex;gap:8px;padding:10px 18px calc(12px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--bd);background:var(--card)}
+.cfoot .cpb{padding:13px 16px}
+@media(max-height:720px){.cbox .cph{padding:10px 16px 8px}.cbox .cph p{display:none}.cbox .cph h3{font-size:17px}.cbox .cmp textarea{min-height:68px;height:68px}.cbox .lbl{margin:6px 0 4px}.cbox .cmp .cpk{gap:5px}.cbox .cmp .cpk .chip{padding:4px 9px;font-size:11.5px}.cbox .anon{margin:7px 0 4px;padding:6px 10px}.cbox .anon .ico{width:30px;height:30px;font-size:15px}.cbox .sw2 .mu{display:none}.cbox .rule{padding:6px 10px;font-size:11.5px;margin:4px 0}.cbox .rule .mu{font-size:11px}.cfoot{padding-top:8px}.cfoot .cpb{padding:11px 14px}}
 </style></head><body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="sg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff4d7d"/><stop offset=".5" stop-color="#e0245e"/><stop offset="1" stop-color="#7c3aed"/></linearGradient>
 <radialGradient id="sh" cx=".22" cy=".14" r=".7"><stop offset="0" stop-color="#fff" stop-opacity=".34"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
@@ -331,13 +344,14 @@ function render(){const m=$('#main'),a=document.activeElement,inM=a&&m.contains(
  $('#aside').innerHTML=ready&&V==='home'?aside():'';$('.shell').classList.toggle('wide',V!=='home');
  $('#nav').innerHTML='<div class="nb"><svg class="lgs big" aria-hidden="true"><use href="#sch"/></svg><small>STELLA MEDICAL COLLEGE</small><b>CONFESSION HUB</b><em>A Favor from Batch #2</em></div>'+[['home','🏠','Home'],['trending','🔥','Trending'],['new','＋','Confess'],['act','🔔','Activity'],['me','👤','Profile']].concat(admin?[['admin','🛡️','Admin']]:[]).map(([k,i,n])=>k==='new'?`<button class="cf2" data-a="new"><span>${i}</span><em>${n}</em></button>`:`<button class="${V===k?'on':''}${k==='admin'?' ad':''}" data-a="v" data-k="${k}"><span>${i}</span>${n}${k==='act'&&unread?`<i class="bdg">${unread}</i>`:''}</button>`).join('');
  if(V==='act'&&unread)S.nt.filter(x=>x.to===me&&!x.read).forEach(x=>col('nt').doc(x.id).update({read:true}).catch(()=>0))}
-function sheet(h){const s=$('#sheet');s.innerHTML=h?`<div class="box">${h}</div>`:'';s.classList.toggle('on',!!h)}
+function sheet(h,cls){const s=$('#sheet');s.innerHTML=h?`<div class="box ${cls||''}">${h}</div>`:'';s.classList.toggle('on',!!h)}
 function composer(pre){if(banned())return toast('Your account is restricted from posting.',1);if(ST().postingOn===false&&!admin)return toast('New confessions are paused by the moderators.',1);
  sheet(`<div class="cmp"><div class="cph"><h3>✍️ New Confession</h3><p>Share it. React to it. Talk about it.</p></div>
- <div class="lbl"><span>Your confession</span><span class="cnt" id="cnt">0 / 1000</span></div><textarea id="ct" maxlength="1000" placeholder="${pre&&EX[pre]?'e.g. '+esc(EX[pre]):"What's on your mind?"}"></textarea>
+ <div class="cbody"><div class="lbl"><span>Your confession</span><span class="cnt" id="cnt">0 / 1000</span></div><textarea id="ct" maxlength="1000" placeholder="${pre&&EX[pre]?'e.g. '+esc(EX[pre]):"What's on your mind?"}"></textarea>
  <div class="lbl"><span>Pick a category</span></div><input type="hidden" id="cc" value="${pre&&EX[pre]?esc(pre):'Love / Crush'}"><div class="cpk">${CATS.map(c=>`<button class="chip ${c===(pre&&EX[pre]?pre:'Love / Crush')?'on':''}" style="--c:${CM[c][1]}" data-a="pickcat" data-k="${c}">${CM[c][0]} ${c}</button>`).join('')}</div>
- <div class="anon"><span class="ico">🕵️</span><label class="sw2"><input type="checkbox" id="ca" checked onchange="$('#cn').style.display=this.checked?'none':'block'"> <span>Post anonymously <span class="mu">(🕵️ your identity stays hidden)</span></span></label></div><input class="s" id="cn" maxlength="24" placeholder="Nickname (any name you like)" style="display:none;margin-bottom:8px">
- <div class="rule">🛡️ Keep it fun. Keep it respectful. No bullying, threats, private information or harmful accusations.</div><div class="meta" style="margin-bottom:10px">🕒 Confessions disappear automatically after 14 days. <button class="lnk" data-a="v" data-k="rules">Read Rules &amp; Privacy</button></div><div class="row" style="flex-wrap:nowrap"><button class="btn cpb" id="cp" data-a="post">Post Confession</button><button class="btn g" data-a="close">Cancel</button></div></div>`);setTimeout(()=>{const t=$('#ct');t&&t.focus()},50)}
+ <div class="anon"><span class="ico">🕵️</span><label class="sw2"><input type="checkbox" id="ca" checked onchange="$('#cn').style.display=this.checked?'none':'block'"> <span>Post anonymously <span class="mu">(🕵️ your identity stays hidden)</span></span></label></div><input class="s" id="cn" maxlength="24" placeholder="Nickname (any name you like)" style="display:none;margin-bottom:6px">
+ <div class="rule">🛡️ Keep it fun. Keep it respectful. No bullying, threats, private information or harmful accusations.<br><span class="mu">🕒 Confessions disappear automatically after 14 days. <button class="lnk" data-a="v" data-k="rules">Read Rules &amp; Privacy</button></span></div></div>
+ <div class="cfoot"><button class="btn cpb" id="cp" data-a="post">Post Confession</button><button class="btn g" data-a="close">Cancel</button></div></div>`,'cbox');setTimeout(()=>{const t=$('#ct');t&&t.focus()},50)}
 function menu(t,id){const x=(t==='conf'?S.conf:S.cm).find(i=>i.id===id);if(!x)return;const own=x.uid===me;
  sheet(`<h3>Options</h3>${own?'<p class="rule">You cannot report your own post or comment. Other members can report it.</p>':`<p class="rule">Report reason:</p><div class="row">${REASONS.map(r=>`<button class="chip" data-a="report" data-t="${t}" data-i="${id}" data-r="${r}">${r}</button>`).join('')}</div><br>`}${own&&t==='cm'&&x.edited?'<p class="rule">✏️ You have already edited this comment. A comment can be edited only once.</p>':''}<div class="row">${own&&t==='cm'&&!x.edited?`<button class="btn vi" data-a="editcm" data-i="${id}">✏️ Edit comment</button>`:''}${own||admin?`<button class="btn r" data-a="del" data-t="${t}" data-i="${id}">🗑 Delete ${t==='conf'?'post':'comment'}</button>`:''}<button class="btn g" data-a="close">Close</button></div>`)}
 async function delItem(t,id,pre){pre=pre||{cm:cmOf(id).slice(),rx:rxOf(id).slice(),rep:S.cm.filter(c=>c.pid===id)};
