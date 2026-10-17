@@ -6,7 +6,7 @@
 <style>:root{--bg:#f4f1ff;--card:#fff;--tx:#1d1740;--mu:#756f98;--ac:#7c5cff;--ac2:#ff5c9d;--tl:#14b8a6;--am:#f59e0b;--bd:#e7e2fa;--ok:#18a874;--bad:#e5484d;--sh:0 8px 28px rgba(76,52,170,.10);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
 @media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f0c24;--card:#1a1636;--tx:#f2efff;--mu:#a29cc6;--bd:#2c2650;--sh:0 8px 28px rgba(0,0,0,.35)}}
 :root[data-theme="dark"]{--bg:#0f0c24;--card:#1a1636;--tx:#f2efff;--mu:#a29cc6;--bd:#2c2650;--sh:0 8px 28px rgba(0,0,0,.35)}
-*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:smooth}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px);scroll-behavior:auto}
 body{margin:0;color:var(--tx);font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:radial-gradient(900px 420px at 8% -6%,rgba(124,92,255,.16),transparent),radial-gradient(700px 420px at 100% 0,rgba(20,184,166,.14),transparent),radial-gradient(600px 400px at 60% 110%,rgba(255,92,157,.10),transparent),var(--bg);background-attachment:fixed;padding-bottom:calc(92px + env(safe-area-inset-bottom,0px))}
 button,select,textarea,input{font:inherit;color:inherit}button{cursor:pointer;border:0;background:none;transition:transform .15s,background .2s,box-shadow .2s,opacity .2s}
 button:active{transform:scale(.95)}*{-webkit-tap-highlight-color:transparent}button,input,select,textarea,a{touch-action:manipulation}:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
@@ -296,7 +296,7 @@ const CM={'Love / Crush':['💘','#ff5c9d'],'Funny':['😂','#f59e0b'],'Academic
 const EX={'Love / Crush':"There's someone in my batch who always saves me a seat in the anatomy lecture. I'm too scared to say thank you 🙈",'Funny':"Told my patient to 'take a deep breath' and then forgot to tell him to breathe out. He's fine, my dignity isn't 😂",'Academic':"Studied 6 hours for pharmacology and I'm still mixing up agonist and antagonist. Send help and chai ☕",'Clinical':"My first time drawing blood, the patient said 'Doctor, you're shaking more than me.' Got it on the second try though 🩺",'Rant':"Why do 8 AM lectures start with attendance and end with 'this part is not in the exam'? 😤",'Secrets':"I still sleep with the lights on after the dissection hall. Please don't tell anyone 🤫",'Appreciation':"Huge thanks to the senior who stayed after ward rounds to explain ECGs to us. It finally clicked 🙏",'Friendship':"Three of us survived biochemistry on instant noodles and memes. Best batch-mates ever 🤝",'Medical Life':"Realised that 'free time' now just means 'time to study a different subject'. This is the way 🏥",'Other':"Found a stray kitten near the hostel and now the whole block runs on a feeding schedule 🐱"};
 const GR=[['#7c5cff','#ff5c9d'],['#14b8a6','#3b82f6'],['#f59e0b','#ef4444'],['#8b5cf6','#06b6d4'],['#ec4899','#f59e0b'],['#10b981','#6366f1']];
 const REASONS=['Harassment','Bullying','Personal information','Offensive content','Spam','Other'];
-let PT='conf',PV='home',PID='',PM='',PCTX=null,lastErr=0,alertArm=false,nuSeen=new Set(),ntKnown=null,alertT=0,alertN=0,lastBadge=-1,ntMarked=new Set(),ACODE=undefined,deferredInstall=null,PU={},AL=30,FL=25,cleaned=false,busyW=0,tray={},IX={rx:{},cm:{},myrx:{},sv:new Set()},lastRx='',AF='all',RF='open',UQ='';const NAMES=['conf','cm','rx','rp','nt','us','sv','st','au'];
+let PT='conf',PV='home',PID='',PM='',PCTX=null,pendRender=false,lastKey='',lastErr=0,alertArm=false,nuSeen=new Set(),ntKnown=null,alertT=0,alertN=0,lastBadge=-1,ntMarked=new Set(),ACODE=undefined,deferredInstall=null,PU={},AL=30,FL=25,cleaned=false,busyW=0,tray={},IX={rx:{},cm:{},myrx:{},sv:new Set()},lastRx='',AF='all',RF='open',UQ='';const NAMES=['conf','cm','rx','rp','nt','us','sv','st','au'];
 let db,me,admin=false,ready=false,V='home',tab='latest',cat='',q='',at='ov',open={},D={},rt={},loaded=new Set(),S={},seen=new Set();NAMES.forEach(n=>S[n]=[]);
 const EXPIRE_MS=14*864e5,live=c=>c.pinned||Date.now()-c.ts<EXPIRE_MS,TREND_MS=7*864e5,col=n=>db.collection(n),rid=()=>Math.random().toString(36).slice(2,9)+Date.now().toString(36);
 const short=u=>String(u).slice(-4),ucode=id=>(IX.codes&&IX.codes[id])||String(id).slice(0,8),ST=()=>S.st.find(x=>x.id==='main')||{};
@@ -415,12 +415,17 @@ function view(){
  if(V==='me')return profile();
  if(V==='admin'&&admin)return adminView();
  return''}
-function render(){const m=$('#main'),a=document.activeElement,inM=a&&m.contains(a)&&/INPUT|TEXTAREA/.test(a.tagName);if(inM&&a.value&&a.id!=='q'&&a.id!=='uq'){clearTimeout(render._t);render._t=setTimeout(render,1500);return}
- if(V!=='act'&&V!=='post')nuSeen.clear();reindex();const had=inM&&a.id?a.id:'',pos=had?a.selectionStart:0;m.innerHTML=view();if(had){const e=$('#'+had);if(e){e.focus();try{e.setSelectionRange(pos,pos)}catch(x){}}}
- setTimeout(()=>lastRx='',700);if(V==='act'){const un=S.nt.filter(x=>x.to===me&&!x.read&&!ntMarked.has(x.id));if(un.length){un.forEach(x=>{ntMarked.add(x.id);nuSeen.add(x.id);col('nt').doc(x.id).update({read:true}).catch(()=>0)});S.nt=S.nt.map(x=>ntMarked.has(x.id)?{...x,read:true}:x);setTimeout(render,0)}}if(V==='post'&&PM){const e=document.getElementById('cm-'+PM);if(e){e.scrollIntoView({block:'center'});e.classList.add('hl')}PM=''}const unread=S.nt.filter(x=>x.to===me&&!x.read&&!ntMarked.has(x.id)).length;
+function setIf(el,html){if(el._h!==html){el.innerHTML=html;el._h=html;return true}return false}
+function render(o){const bg=!!(o&&o.bg===true),m=$('#main'),a=document.activeElement,inM=a&&m.contains(a)&&/INPUT|TEXTAREA/.test(a.tagName),search=inM&&(a.id==='q'||a.id==='uq');
+ if(bg&&inM&&!search){pendRender=true;return}
+ if(V!=='act'&&V!=='post')nuSeen.clear();reindex();
+ const had=inM&&a.id?a.id:'',pos=had?a.selectionStart:0,sy=window.scrollY,key=V+'|'+PID,html=view();
+ if(setIf(m,html)){if(key===lastKey)window.scrollTo({top:sy,behavior:'instant'});if(had){const e=$('#'+had);if(e){e.focus({preventScroll:true});try{e.setSelectionRange(pos,pos)}catch(x){}}}}
+ lastKey=key;
+ setTimeout(()=>lastRx='',700);if(V==='act'){const un=S.nt.filter(x=>x.to===me&&!x.read&&!ntMarked.has(x.id));if(un.length){un.forEach(x=>{ntMarked.add(x.id);nuSeen.add(x.id);col('nt').doc(x.id).update({read:true}).catch(()=>0)});S.nt=S.nt.map(x=>ntMarked.has(x.id)?{...x,read:true}:x);setTimeout(render,0)}}if(V==='post'&&PM){const e=document.getElementById('cm-'+PM);if(e){e.scrollIntoView({block:'center',behavior:'instant'});e.classList.add('hl');requestAnimationFrame(()=>requestAnimationFrame(()=>e.isConnected&&e.scrollIntoView({block:'center',behavior:'instant'})))}PM=''}const unread=S.nt.filter(x=>x.to===me&&!x.read&&!ntMarked.has(x.id)).length;
  if(unread!==lastBadge){lastBadge=unread;document.title=(unread?'('+(unread>9?'9+':unread)+') ':'')+BASE_TITLE;try{const r=unread?(navigator.setAppBadge&&navigator.setAppBadge(unread)):(navigator.clearAppBadge&&navigator.clearAppBadge());r&&r.catch&&r.catch(()=>0)}catch(e){}}
- $('#aside').innerHTML=ready&&V==='home'?aside():'';$('.shell').classList.toggle('wide',V!=='home');
- $('#nav').innerHTML='<div class="nb"><div class="lgbtn" data-a="refresh" role="button" tabindex="0" aria-label="Refresh Stella Confession Hub"><svg class="lgs big" aria-hidden="true"><use href="#sch"/></svg><small>STELLA MEDICAL COLLEGE</small><b>CONFESSION HUB</b><em>A Favor from Batch #2</em></div><div class="tgrow"><span>Theme</span>'+tglHtml()+'</div></div>'+[['home','🏠','Home'],['trending','🔥','Trending'],['new','＋','Confess'],['act','🔔','Activity'],['me','👤','Profile']].concat(admin?[['admin','🛡️','Admin']]:[]).map(([k,i,n])=>k==='new'?`<button class="cf2" data-a="new"><span>${i}</span><em>${n}</em></button>`:`<button class="${(V==='post'?(PCTX?'admin':'act'):V)===k?'on':''}${k==='admin'?' ad':''}" data-a="v" data-k="${k}"><span>${i}</span>${n}${k==='act'&&unread?`<i class="bdg">${unread}</i>`:''}</button>`).join('');
+ setIf($('#aside'),ready&&V==='home'?aside():'');$('.shell').classList.toggle('wide',V!=='home');
+ setIf($('#nav'),'<div class="nb"><div class="lgbtn" data-a="refresh" role="button" tabindex="0" aria-label="Refresh Stella Confession Hub"><svg class="lgs big" aria-hidden="true"><use href="#sch"/></svg><small>STELLA MEDICAL COLLEGE</small><b>CONFESSION HUB</b><em>A Favor from Batch #2</em></div><div class="tgrow"><span>Theme</span>'+tglHtml()+'</div></div>'+[['home','🏠','Home'],['trending','🔥','Trending'],['new','＋','Confess'],['act','🔔','Activity'],['me','👤','Profile']].concat(admin?[['admin','🛡️','Admin']]:[]).map(([k,i,n])=>k==='new'?`<button class="cf2" data-a="new"><span>${i}</span><em>${n}</em></button>`:`<button class="${(V==='post'?(PCTX?'admin':'act'):V)===k?'on':''}${k==='admin'?' ad':''}" data-a="v" data-k="${k}"><span>${i}</span>${n}${k==='act'&&unread?`<i class="bdg">${unread}</i>`:''}</button>`).join(''));
 }
 function sheet(h,cls){const s=$('#sheet');s.innerHTML=h?`<div class="box ${cls||''}">${h}</div>`:'';document.documentElement.classList.toggle('sheet-open',!!h);s.classList.toggle('on',!!h)}
 function composer(pre){if(banned())return toast('Your account is restricted from posting.',1);if(ST().postingOn===false&&!admin)return toast('New confessions are paused by the moderators.',1);
@@ -450,6 +455,7 @@ async function reportAct(r,t,k,pre,same,au){const ops=[];
  same.forEach(x=>ops.push(col('rp').doc(x.id).update({status:'resolved',action:k,by:me,rts:Date.now()})));
  ops.push(audit('report:'+k,(t&&t.text)||r.reason));await Promise.all(ops)}
 document.addEventListener('input',e=>{const t=e.target;if(t.id==='q'){q=t.value;FL=25;render()}else if(t.id==='uq'){UQ=t.value;AL=30;render()}else if(t.id==='ct')$('#cnt').textContent=t.value.length+' / 1000';else if(t.id==='dc'){$('#dd').disabled=t.value.trim()!=='DELETE'}else if(t.dataset.d)D[t.dataset.d]=t.value});
+document.addEventListener('focusout',()=>setTimeout(()=>{if(!pendRender)return;const a=document.activeElement,m=$('#main');if(a&&m.contains(a)&&/INPUT|TEXTAREA/.test(a.tagName)&&a.id!=='q'&&a.id!=='uq')return;pendRender=false;render({bg:true})},60));
 document.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&e.target.dataset&&e.target.dataset.a==='refresh'){e.preventDefault();location.reload();return}if(e.key==='Enter'&&e.target.dataset&&e.target.dataset.d){e.preventDefault();const s=e.target.parentElement.querySelector('[data-a=send]');s&&s.click()}});
 document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b)return;const d=b.dataset,a=d.a,I=d.i;
  if(a==='v'){hideAlert();PCTX=null;if(d.k==='rules'&&V!=='rules')PV=V;V=d.k;FL=25;seen.clear();sheet();render();scrollTo(0,0)}
@@ -495,20 +501,20 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
  else if(a==='savecode'){const v=$('#s-code').value.trim();if(v.length<6)return toast('Use at least 6 characters',1);run(async()=>{await claude.setCode(v);ACODE=v;await audit('access code changed','');render()},'Access code changed ✅')}
  else if(a==='alertx')hideAlert();
  else if(a==='ctx'&&admin){let cid='',mid='';if(d.k==='rp'){const r=S.rp.find(x=>x.id===I);if(!r)return;if(r.tt==='conf')cid=r.tid;else{const c=S.cm.find(x=>x.id===r.tid);cid=c?c.cid:'';mid=r.tid}}else{const c=S.cm.find(x=>x.id===I);if(!c)return;cid=c.cid;mid=I}
-  PCTX={k:d.k,id:I};PID=cid;PM=mid;open[cid]=true;V='post';seen.clear();sheet();render();scrollTo(0,0)}
+  PCTX={k:d.k,id:I};PID=cid;PM=mid;open[cid]=true;V='post';seen.clear();sheet();scrollTo(0,0);render()}
  else if(a==='ctxback'){const k=PCTX&&PCTX.k;PCTX=null;V='admin';at=k==='rp'?'rp':'cm';seen.clear();render();scrollTo(0,0)}
- else if(a==='opennt'){hideAlert();PCTX=null;PID=d.c;PM=d.m||'';open[d.c]=true;V='post';seen.clear();sheet();render();scrollTo(0,0)}
+ else if(a==='opennt'){hideAlert();PCTX=null;PID=d.c;PM=d.m||'';open[d.c]=true;V='post';seen.clear();sheet();scrollTo(0,0);render()}
  else if(a==='install'){if(!deferredInstall)return;deferredInstall.prompt();deferredInstall.userChoice.finally(()=>{deferredInstall=null;render()})}
  else if(a==='copyid'){(navigator.clipboard?navigator.clipboard.writeText(I):Promise.reject()).then(()=>toast('User ID copied'),()=>toast(I))}});
 addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;ready&&render()});addEventListener('appinstalled',()=>{deferredInstall=null;toast('App installed ✅');render()});
 if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>0);
-setInterval(()=>{ready&&render()},20000);addEventListener('offline',()=>toast('You are offline',1));addEventListener('online',()=>toast('Back online'));
+setInterval(()=>{ready&&render({bg:true})},20000);addEventListener('offline',()=>toast('You are offline',1));addEventListener('online',()=>toast('Back online'));
 (async()=>{try{
  db=await claude.use('db');const user=await claude.use('user');
  if(!db||!user){$('#main').innerHTML=empty('🔒','Sign in to continue','',false);return}
  me=await user.id();PU=user;admin=!!(user.canEdit&&user.canEdit());
  if(admin&&claude.getCode)claude.getCode().then(c=>{ACODE=c;render()}).catch(()=>{ACODE=null;render()});
- NAMES.forEach(n=>col(n).onSnapshot(s=>{if(busyW>0)return;S[n]=s.docs.map(d=>({id:d.id,...d.data()}));if(n==='nt')checkNew();loaded.add(n);if(loaded.size===NAMES.length){ready=true;if(!cleaned){cleaned=true;setTimeout(()=>cleanup().catch(()=>0),2000)}}render()},e=>{if(!ready)$('#main').innerHTML=empty('⚠️','Could not load data',esc(e.message),false);else if(Date.now()-lastErr>20000){lastErr=Date.now();toast('Connection problem. Retrying…',1)}}));
+ NAMES.forEach(n=>col(n).onSnapshot(s=>{if(busyW>0)return;S[n]=s.docs.map(d=>({id:d.id,...d.data()}));if(n==='nt')checkNew();loaded.add(n);if(loaded.size===NAMES.length){ready=true;if(!cleaned){cleaned=true;setTimeout(()=>cleanup().catch(()=>0),2000)}}render({bg:true})},e=>{if(!ready)$('#main').innerHTML=empty('⚠️','Could not load data',esc(e.message),false);else if(Date.now()-lastErr>20000){lastErr=Date.now();toast('Connection problem. Retrying…',1)}}));
  col('us').doc(me).get().then(s=>{if(!s.exists)col('us').doc(me).set({ts:Date.now(),banned:false})}).catch(()=>0);
 }catch(e){$('#main').innerHTML=empty('⚠️','Something went wrong',esc(e.message||e),false)}})();
 </script></body></html>
