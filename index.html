@@ -208,10 +208,10 @@ nav .bdg{top:-3px;right:2px}
  #nav button.on span{opacity:1;transform:scale(1.1);animation:iconpop .6s cubic-bezier(.34,1.56,.64,1)}
  #nav button:after{display:none!important}
  #nav .bdg{top:5px;right:calc(50% - 30px);background:var(--bad);color:#fff;border:2px solid var(--card);font-size:10px;padding:0 5px;border-radius:99px;z-index:3}
- #bub{display:block;position:absolute;z-index:1;left:0;right:0;top:6px;bottom:6px;border-radius:28px;background:linear-gradient(135deg,var(--ac),var(--ac2));box-shadow:0 10px 24px rgba(124,92,255,.45),inset 0 1px 2px rgba(255,255,255,.45);overflow:hidden}
- #bub:after{content:"";position:absolute;top:0;bottom:0;left:0;width:38%;transform:translateX(-120%) skewX(-22deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);opacity:0;animation:idleglint 7s ease-in-out 2.5s infinite}
+ #bub{display:block;position:absolute;z-index:1;left:0;right:0;top:6px;bottom:6px;border-radius:28px;background:linear-gradient(135deg,var(--ac),var(--ac2));box-shadow:0 10px 24px rgba(124,92,255,.45),inset 0 1px 2px rgba(255,255,255,.45);}
+ #bub:after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,var(--ac),var(--ac2));opacity:0;z-index:-1}
  #bub.pop{animation:settle .5s ease-out}
- #bub.pop:after{animation:glint .75s ease-out .05s}
+ #bub.pop:after{animation:halo .7s ease-out}
  #bub.off{opacity:0;scale:.7}
  #fab{display:flex;align-items:center;gap:6px;position:fixed;z-index:8;right:16px;bottom:calc(12px + 68px + 14px + env(safe-area-inset-bottom,0px));height:52px;padding:0 20px 0 14px;border-radius:26px;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;font-weight:800;font-size:14px;box-shadow:0 12px 28px rgba(124,92,255,.5);transition:padding .35s cubic-bezier(.3,.8,.25,1),gap .35s;animation:fabin .6s cubic-bezier(.34,1.56,.64,1) .55s both,fabfloat 3.4s ease-in-out 1.3s infinite}
  #fab:before{content:"";position:absolute;inset:0;border-radius:inherit;background:inherit;z-index:-1;animation:ring 2.8s ease-out 1.6s infinite}
@@ -224,10 +224,9 @@ nav .bdg{top:-3px;right:2px}
 @keyframes navin{from{translate:0 90px;opacity:0}to{translate:0 0;opacity:1}}
 @keyframes fabin{from{scale:.3;opacity:0}to{scale:1;opacity:1}}
 @keyframes fabfloat{0%,100%{translate:0 0}50%{translate:0 -4px}}
-@keyframes iconpop{0%{transform:scale(.45) rotate(-16deg)}55%{transform:scale(1.32) rotate(9deg)}100%{transform:scale(1.1) rotate(0)}}
+@keyframes iconpop{0%{transform:scale(.5)}55%{transform:scale(1.32)}100%{transform:scale(1.1)}}
 @keyframes settle{0%{scale:1 1}35%{scale:1.05 .9}70%{scale:.985 1.05}100%{scale:1 1}}
-@keyframes glint{0%{transform:translateX(-120%) skewX(-22deg);opacity:0}20%{opacity:1}100%{transform:translateX(440%) skewX(-22deg);opacity:0}}
-@keyframes idleglint{0%,80%{transform:translateX(-120%) skewX(-22deg);opacity:0}86%{opacity:1}100%{transform:translateX(440%) skewX(-22deg);opacity:0}}
+@keyframes halo{0%{transform:scale(1);opacity:.55}100%{transform:scale(1.3,1.55);opacity:0}}
 @keyframes ring{0%{transform:scale(1);opacity:.55}100%{transform:scale(1.32,1.6);opacity:0}}
 @media(min-width:600px) and (max-width:899px){#nav{left:50%;right:auto;width:min(560px,calc(100% - 28px));transform:translateX(-50%)}}
 </style></head><body>
