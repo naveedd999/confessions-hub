@@ -198,25 +198,37 @@ nav .bdg{top:-3px;right:2px}
 @media(max-width:899px){
  body{padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))}
  #toast{bottom:calc(158px + env(safe-area-inset-bottom,0px))}
- #nav{left:14px;right:14px;bottom:calc(12px + env(safe-area-inset-bottom,0px));height:68px;padding:0 6px;border-radius:34px;background:color-mix(in srgb,var(--card) 94%,transparent);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border:1px solid var(--bd);box-shadow:0 16px 40px rgba(60,40,150,.22),0 2px 6px rgba(60,40,150,.08);overflow:visible;display:block}
+ #nav{left:14px;right:14px;bottom:calc(12px + env(safe-area-inset-bottom,0px));height:68px;padding:0 6px;border-radius:34px;background:color-mix(in srgb,var(--card) 94%,transparent);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border:1px solid var(--bd);box-shadow:0 16px 40px rgba(60,40,150,.22),0 2px 6px rgba(60,40,150,.08);overflow:visible;display:block;animation:navin .75s cubic-bezier(.2,.9,.3,1.15) .1s both}
  #navin{position:relative;z-index:2;height:100%;display:flex;align-items:stretch}
  #nav .nb,#nav .cf2{display:none}
- #nav button{flex:1 1 0;min-width:0;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:0 2px;border-radius:0;background:none;color:var(--mu);font-size:10.5px;font-weight:600;position:relative}
- #nav button span{display:grid;place-items:center;width:44px;height:44px;margin-bottom:-7px;font-size:21px;background:none!important;box-shadow:none!important;opacity:.85;transform:none;transition:transform .45s cubic-bezier(.3,.8,.25,1),opacity .25s}
- #nav button.on{color:var(--tx);font-weight:800}
- #nav button.on span{opacity:1;transform:translateY(-3px) scale(1.12)}
+ #nav button{flex:1 1 0;min-width:0;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:0 2px;border-radius:0;background:none;color:var(--mu);font-size:10.5px;font-weight:600;position:relative;transition:color .3s}
+ #nav button span{display:grid;place-items:center;font-size:22px;line-height:1.1;background:none!important;box-shadow:none!important;opacity:.85;transition:transform .25s cubic-bezier(.34,1.56,.64,1),opacity .25s}
+ #nav button:active span{transform:scale(.86)}
+ #nav button.on{color:#fff;font-weight:800;text-shadow:0 1px 2px rgba(60,20,120,.35)}
+ #nav button.on span{opacity:1;transform:scale(1.1);animation:iconpop .6s cubic-bezier(.34,1.56,.64,1)}
  #nav button:after{display:none!important}
- #nav .bdg{top:6px;right:calc(50% - 24px);background:var(--bad);color:#fff;border:2px solid var(--card);font-size:10px;padding:0 5px;border-radius:99px}
- #bub{display:block;position:absolute;z-index:1;left:0;top:6px;width:44px;height:44px;transition:transform .5s cubic-bezier(.3,.8,.25,1),opacity .25s;will-change:transform}
- #bub:before{content:"";position:absolute;inset:0;border-radius:50%;background:linear-gradient(135deg,var(--ac),var(--ac2));box-shadow:0 8px 20px rgba(124,92,255,.45),inset 0 1px 2px rgba(255,255,255,.4);transition:scale .25s}
- #bub.off{opacity:0}#bub.off:before{scale:.6}
- #bub.go:before{animation:liq .5s ease-out}
- #fab{display:flex;align-items:center;gap:6px;position:fixed;z-index:8;right:16px;bottom:calc(12px + 68px + 14px + env(safe-area-inset-bottom,0px));height:52px;padding:0 20px 0 14px;border-radius:26px;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;font-weight:800;font-size:14px;box-shadow:0 12px 28px rgba(124,92,255,.5);animation:glow 2.8s ease-in-out infinite}
- #fab span{font-size:24px;line-height:1;margin-top:-2px}
- #fab:active{transform:scale(.94)}
+ #nav .bdg{top:5px;right:calc(50% - 30px);background:var(--bad);color:#fff;border:2px solid var(--card);font-size:10px;padding:0 5px;border-radius:99px;z-index:3}
+ #bub{display:block;position:absolute;z-index:1;left:0;right:0;top:6px;bottom:6px;border-radius:28px;background:linear-gradient(135deg,var(--ac),var(--ac2));box-shadow:0 10px 24px rgba(124,92,255,.45),inset 0 1px 2px rgba(255,255,255,.45);overflow:hidden}
+ #bub:after{content:"";position:absolute;top:0;bottom:0;left:0;width:38%;transform:translateX(-120%) skewX(-22deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.6),transparent);opacity:0;animation:idleglint 7s ease-in-out 2.5s infinite}
+ #bub.pop{animation:settle .5s ease-out}
+ #bub.pop:after{animation:glint .75s ease-out .05s}
+ #bub.off{opacity:0;scale:.7}
+ #fab{display:flex;align-items:center;gap:6px;position:fixed;z-index:8;right:16px;bottom:calc(12px + 68px + 14px + env(safe-area-inset-bottom,0px));height:52px;padding:0 20px 0 14px;border-radius:26px;background:linear-gradient(135deg,var(--ac),var(--ac2));color:#fff;font-weight:800;font-size:14px;box-shadow:0 12px 28px rgba(124,92,255,.5);transition:padding .35s cubic-bezier(.3,.8,.25,1),gap .35s;animation:fabin .6s cubic-bezier(.34,1.56,.64,1) .55s both,fabfloat 3.4s ease-in-out 1.3s infinite}
+ #fab:before{content:"";position:absolute;inset:0;border-radius:inherit;background:inherit;z-index:-1;animation:ring 2.8s ease-out 1.6s infinite}
+ #fab span{font-size:24px;line-height:1;margin-top:-2px;transition:transform .4s cubic-bezier(.34,1.56,.64,1)}
+ #fab b{font-weight:800;max-width:90px;white-space:nowrap;overflow:hidden;transition:max-width .35s cubic-bezier(.3,.8,.25,1),opacity .25s}
+ #fab.mini{padding:0 14px;gap:0}#fab.mini b{max-width:0;opacity:0}#fab.mini span{transform:rotate(90deg)}
+ #fab:active{scale:.94}
 }
 @media(min-width:600px) and (max-width:899px){#fab{right:max(16px,calc(50% - 280px))}}
-@keyframes liq{0%{scale:1 1}50%{scale:1.18 .94}100%{scale:1 1}}
+@keyframes navin{from{translate:0 90px;opacity:0}to{translate:0 0;opacity:1}}
+@keyframes fabin{from{scale:.3;opacity:0}to{scale:1;opacity:1}}
+@keyframes fabfloat{0%,100%{translate:0 0}50%{translate:0 -4px}}
+@keyframes iconpop{0%{transform:scale(.45) rotate(-16deg)}55%{transform:scale(1.32) rotate(9deg)}100%{transform:scale(1.1) rotate(0)}}
+@keyframes settle{0%{scale:1 1}35%{scale:1.05 .9}70%{scale:.985 1.05}100%{scale:1 1}}
+@keyframes glint{0%{transform:translateX(-120%) skewX(-22deg);opacity:0}20%{opacity:1}100%{transform:translateX(440%) skewX(-22deg);opacity:0}}
+@keyframes idleglint{0%,80%{transform:translateX(-120%) skewX(-22deg);opacity:0}86%{opacity:1}100%{transform:translateX(440%) skewX(-22deg);opacity:0}}
+@keyframes ring{0%{transform:scale(1);opacity:.55}100%{transform:scale(1.32,1.6);opacity:0}}
 @media(min-width:600px) and (max-width:899px){#nav{left:50%;right:auto;width:min(560px,calc(100% - 28px));transform:translateX(-50%)}}
 </style></head><body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="sg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff4d7d"/><stop offset=".5" stop-color="#e0245e"/><stop offset="1" stop-color="#7c3aed"/></linearGradient>
@@ -230,7 +242,7 @@ nav .bdg{top:-3px;right:2px}
 <path d="M82 376H186L210 340L238 406L264 358L282 376H430" fill="none" stroke="#fff" stroke-opacity=".78" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/></g></symbol></svg>
 <header class="top"><div class="lg" data-a="refresh" role="button" tabindex="0" aria-label="Refresh Stella Confession Hub"><svg class="lgs" aria-hidden="true"><use href="#sch"/></svg><div><b>Confession Hub</b><small>Stella Medical College</small></div></div><button class="tgl" data-a="theme" role="switch" aria-checked="false" aria-label="Switch between dark and light theme"><span class="k"></span></button></header>
 <div class="shell"><nav id="nav"><i id="bub" aria-hidden="true"></i><div id="navin"></div></nav><main id="main"><div class="card sk"></div><div class="card sk"></div></main><aside id="aside"></aside></div>
-<noscript><div class="empty"><h3>JavaScript required</h3>Please enable JavaScript to use this site.</div></noscript><div id="sheet"></div><button id="fab" data-a="new" aria-label="Confess"><span>＋</span>Confess</button><div id="toast"></div><div id="alert" role="status" aria-live="polite"></div>
+<noscript><div class="empty"><h3>JavaScript required</h3>Please enable JavaScript to use this site.</div></noscript><div id="sheet"></div><button id="fab" data-a="new" aria-label="Confess"><span>＋</span><b>Confess</b></button><div id="toast"></div><div id="alert" role="status" aria-live="polite"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
 /* ====== CONFIG: paste your Supabase project values (Project Settings > API) ====== */
@@ -442,13 +454,14 @@ function view(){
  if(V==='admin'&&admin)return adminView();
  return''}
 function placeBub(){const n=$('#nav'),bub=$('#bub'),b=n&&n.querySelector('button.on:not(.cf2)');if(!bub)return;
- if(!b||getComputedStyle(bub).display==='none'){bub.classList.add('off');bub._x=undefined;return}
- const nr=n.getBoundingClientRect(),br=b.getBoundingClientRect(),x=Math.round(br.left+br.width/2-nr.left-bub.offsetWidth/2),fresh=bub._x===undefined||bub.classList.contains('off');
- bub.classList.remove('off');
- if(fresh){bub.style.transition='none';bub.style.transform='translateX('+x+'px)';void bub.offsetWidth;bub.style.transition=''}
- else if(x!==bub._x){bub.style.transform='translateX('+x+'px)';bub.classList.remove('go');void bub.offsetWidth;bub.classList.add('go')}
- bub._x=x}
-addEventListener('resize',()=>{const b=$('#bub');if(b)b._x=undefined;placeBub()});
+ if(!b||getComputedStyle(bub).display==='none'){bub.classList.add('off');bub._l=undefined;return}
+ const nr=n.getBoundingClientRect(),br=b.getBoundingClientRect(),inset=5,L=Math.round(br.left-nr.left-n.clientLeft+inset),R=Math.round(nr.right-n.clientLeft-br.right+inset),fresh=bub._l===undefined||bub.classList.contains('off');
+ if(fresh){bub.style.transition='none';bub.style.left=L+'px';bub.style.right=R+'px';void bub.offsetWidth;bub.style.transition='';bub.classList.remove('off')}
+ else if(L!==bub._l||R!==bub._r){const toRight=L>bub._l,lead='.32s cubic-bezier(.2,.8,.2,1)',trail='.5s cubic-bezier(.4,0,.2,1) .04s';
+  bub.style.transition='left '+(toRight?trail:lead)+',right '+(toRight?lead:trail)+',opacity .25s,scale .25s';bub.style.left=L+'px';bub.style.right=R+'px';
+  bub.classList.remove('pop');clearTimeout(bub._t);bub._t=setTimeout(()=>{bub.classList.remove('pop');void bub.offsetWidth;bub.classList.add('pop')},470)}
+ bub._l=L;bub._r=R}
+addEventListener('resize',()=>{const b=$('#bub');if(b)b._l=undefined;placeBub()});
 function setIf(el,html){if(el._h!==html){el.innerHTML=html;el._h=html;return true}return false}
 function render(o){const bg=!!(o&&o.bg===true),m=$('#main'),a=document.activeElement,inM=a&&m.contains(a)&&/INPUT|TEXTAREA/.test(a.tagName),search=inM&&(a.id==='q'||a.id==='uq');
  if(bg&&inM&&!search){pendRender=true;return}
@@ -544,7 +557,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(!b
  else if(a==='copyid'){(navigator.clipboard?navigator.clipboard.writeText(I):Promise.reject()).then(()=>toast('User ID copied'),()=>toast(I))}});
 addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;ready&&render()});addEventListener('appinstalled',()=>{deferredInstall=null;toast('App installed ✅');render()});
 if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>0);
-(document.fonts&&document.fonts.ready&&document.fonts.ready.then(()=>{const b=$('#bub');if(b)b._x=undefined;placeBub()}));setInterval(()=>{ready&&render({bg:true})},20000);addEventListener('offline',()=>toast('You are offline',1));addEventListener('online',()=>toast('Back online'));
+(document.fonts&&document.fonts.ready&&document.fonts.ready.then(()=>{const b=$('#bub');if(b)b._l=undefined;placeBub()}));(()=>{let ly=scrollY,tk=false;addEventListener('scroll',()=>{if(tk)return;tk=true;requestAnimationFrame(()=>{const y=scrollY,f=$('#fab');if(f){if(y>ly+6&&y>120)f.classList.add('mini');else if(y<ly-6||y<80)f.classList.remove('mini')}ly=y;tk=false})},{passive:true})})();setInterval(()=>{ready&&render({bg:true})},20000);addEventListener('offline',()=>toast('You are offline',1));addEventListener('online',()=>toast('Back online'));
 (async()=>{try{
  db=await claude.use('db');const user=await claude.use('user');
  if(!db||!user){$('#main').innerHTML=empty('🔒','Sign in to continue','',false);return}
