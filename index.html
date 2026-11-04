@@ -252,7 +252,14 @@ nav .bdg{top:-3px;right:2px}
 @keyframes spUp{from{transform:translateY(12px);opacity:0}to{transform:none;opacity:1}}
 @keyframes spLet{from{transform:translateY(16px) scale(.6);opacity:0}to{transform:none;opacity:1}}
 @keyframes spEcg{to{stroke-dashoffset:0}}
-@media(prefers-reduced-motion:reduce){#splash{display:none}}
+@media(prefers-reduced-motion:reduce){#splash small,#splash .sp-h i,#splash .sp-pill,#splash .sp-tag,#splash .sp-svg{opacity:1!important;animation:none!important;transform:none!important}#splash .sp-ecg path{stroke-dashoffset:0!important;animation:none!important}#splash .ring,#splash .sb{display:none}#splash{transition:opacity .2s}}
+
+/* ===== touch polish: no tap flash, no long-press callout on controls (text you read stays selectable) ===== */
+*{-webkit-tap-highlight-color:transparent}
+html{-webkit-touch-callout:none}
+button,[data-a],nav,#nav,#bub,#fab,.top,.lg,.lgbtn,.lgs,.chip,.seg,.tabs,.atabs,.tiles,.rx,.act,.hero,.pulse,.stats,.st,.bars,.hb,.prompt,.tgl,.ntc,.av,.av2,.cph,.sp-logo,svg{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+img,svg{-webkit-user-drag:none;user-drag:none}
+input,textarea,select,.txt,.bub p,.cm p,.rl li,.mu2,code,[contenteditable]{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
 </style></head><body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs><linearGradient id="sg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff4d7d"/><stop offset=".5" stop-color="#e0245e"/><stop offset="1" stop-color="#7c3aed"/></linearGradient>
 <radialGradient id="sh" cx=".22" cy=".14" r=".7"><stop offset="0" stop-color="#fff" stop-opacity=".34"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
@@ -268,12 +275,17 @@ nav .bdg{top:-3px;right:2px}
 <small>STELLA MEDICAL COLLEGE</small><h1 class="sp-h" id="sp-h">CONFESSION HUB</h1>
 <svg class="sp-ecg" viewBox="0 0 400 46" preserveAspectRatio="none"><path pathLength="1" d="M0 24H70l8-14 10 30 10-34 8 18H190l8-14 10 30 10-34 8 18H320l8-14 10 30 10-34 8 18H400"/></svg>
 <span class="sp-pill">A Favor from Batch #2</span><p class="sp-tag">To Share. To React. To Learn.<br>And Grow with Confidence.</p></div>
-<script>(function(){var s=document.getElementById('splash');if(!s)return;try{if(sessionStorage.getItem('splash')==='1'||(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)){s.remove();return}sessionStorage.setItem('splash','1')}catch(e){}
-var h=document.getElementById('sp-h');h.innerHTML='CONFESSION HUB'.split('').map(function(c,i){return c===' '?'<i style="width:.35em">&nbsp;</i>':'<i style="--i:'+i+'">'+c+'</i>'}).join('');
-function out(){if(s._o)return;s._o=1;s.classList.add('out');setTimeout(function(){s.remove()},800)}
-s.addEventListener('click',out);setTimeout(out,2100)})()</script>
+<script>(function(){var s=document.getElementById('splash');if(!s)return;
+var red=!!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches),h=document.getElementById('sp-h');
+h.innerHTML='CONFESSION HUB'.split('').map(function(c,i){return c===' '?'<i style="width:.35em">&nbsp;</i>':'<i style="--i:'+i+'">'+c+'</i>'}).join('');
+var minDone=false,rdy=false,gone=false;
+function out(){if(gone||!minDone||!rdy)return;gone=true;s.classList.add('out');setTimeout(function(){s.remove()},800)}
+window.splashReady=function(){rdy=true;out()};
+setTimeout(function(){minDone=true;out()},red?500:2000);
+s.addEventListener('click',function(){minDone=true;out()});
+setTimeout(function(){minDone=true;rdy=true;out()},9000)})()</script>
 <header class="top"><div class="lg" data-a="refresh" role="button" tabindex="0" aria-label="Refresh Stella Confession Hub"><svg class="lgs" aria-hidden="true"><use href="#sch"/></svg><div><b>Confession Hub</b><small>Stella Medical College</small></div></div><button class="tgl" data-a="theme" role="switch" aria-checked="false" aria-label="Switch between dark and light theme"><span class="k"></span></button></header>
-<div class="shell"><nav id="nav"><i id="bub" aria-hidden="true"></i><div id="navin"></div></nav><main id="main"><div class="card sk"></div><div class="card sk"></div></main><aside id="aside"></aside></div>
+<div class="shell"><nav id="nav"><i id="bub" aria-hidden="true"></i><div id="navin"></div></nav><main id="main"></main><aside id="aside"></aside></div>
 <noscript><div class="empty"><h3>JavaScript required</h3>Please enable JavaScript to use this site.</div></noscript><div id="sheet"></div><button id="fab" data-a="new" aria-label="Confess"><span>＋</span><b>Confess</b></button><div id="toast"></div><div id="alert" role="status" aria-live="polite"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
@@ -292,7 +304,7 @@ const gb=t=>`<button type="button" class="gbtn" data-g="1">${G}<span>${t}</span>
 const fld=(id,l,t,p,ac)=>`<label class="al">${l}<span class="pw"><input class="s" id="${id}" type="${t}" placeholder="${p}" autocomplete="${ac}" required>${t==='password'?`<button type="button" class="eye" data-eye="${id}" aria-label="Show or hide password">👁</button>`:''}</span></label>`;
 const bk='<p class="sw"><button class="lnk" data-go="login">← Back to log in</button></p>';
 const VIEWS={
- load:()=>'<div class="spin"></div>',
+ load:()=>'',
  setup:()=>'<h3>Setup needed</h3><p class="mu2">Add your Supabase URL and anon key at the top of index.html (see README).</p>',
  login:()=>`<h3>Welcome back</h3><p class="mu2">Log in to your account · 🔒 Stella Institute members only</p>${gb('Continue with Google')}<form data-f="login" novalidate>${fld('ae','Email','email','you@example.com','email')}${fld('ap','Password','password','Your password','current-password')}<div style="text-align:right;margin-top:6px"><button type="button" class="lnk" data-go="forgot">Forgot password?</button></div><button class="btn full" id="ab">Log in</button></form><p class="sw">New here? <button class="lnk" data-go="signup">Create an account</button></p>`,
  signup:()=>`<h3>Create your account</h3><p class="mu2">It only takes a minute. 🔒 Members only: Stella Institute doctors and students (you will need an access code).</p>${gb('Sign up with Google')}<form data-f="signup" novalidate>${fld('an','Name','text','Your name','name')}${fld('ae','Email','email','you@example.com','email')}${fld('ap','Password','password','At least 8 characters, letters + numbers','new-password')}${fld('ac2','Confirm password','password','Repeat password','new-password')}<button class="btn full" id="ab" style="margin-top:14px">Create account</button></form><p class="sw">Already have an account? <button class="lnk" data-go="login">Log in</button></p>`,
@@ -301,7 +313,7 @@ const VIEWS={
  join:()=>`<h3>Members only 🔒</h3><p class="mu2">This community is only for Stella Institute doctors and students. Enter the access code shared by your batch representative or admin.</p><form data-f="join" novalidate><label class="al">Access code<span class="pw"><input class="s" id="ajc" type="text" placeholder="Enter access code" autocomplete="off" autocapitalize="off" required></span></label><button class="btn full" id="ab" style="margin-top:14px">Join community</button></form><p class="sw"><button class="lnk" data-out="1">Log out</button></p>`,
  reset:()=>`<h3>Choose a new password</h3><form data-f="reset" novalidate>${fld('ap','New password','password','At least 8 characters, letters + numbers','new-password')}${fld('ac2','Confirm password','password','Repeat password','new-password')}<button class="btn full" id="ab" style="margin-top:14px">Update password</button></form>`};
 function show(v,m,ok){view=v;let a=$a('auth');if(!a){a=document.createElement('div');a.id='auth';a.className='auth';a.innerHTML='<div class="wrap"><div class="brand"><svg class="lgs big" style="display:block;margin:0 auto 8px" aria-hidden="true"><use href="#sch"/></svg><small>STELLA MEDICAL COLLEGE</small><b>CONFESSION HUB</b><span>A Favor from Batch #2</span></div><div class="card" id="ac"></div></div>';document.body.appendChild(a)}
- $a('ac').innerHTML=VIEWS[v]()+'<p id="am" role="alert"></p>';m&&msg(m,ok);const i=$a('ac').querySelector('input');i&&i.focus()}
+ $a('ac').innerHTML=VIEWS[v]()+'<p id="am" role="alert"></p>';$a('ac').style.display=v==='load'?'none':'';m&&msg(m,ok);const i=$a('ac').querySelector('input');i&&i.focus();if(v!=='load'&&window.splashReady)window.splashReady()}
 const msg=(t,ok)=>{const m=$a('am');if(m){m.textContent=t;m.className=ok?'okm':'err'}};
 const wait=on=>{busy=on;const b=$a('ab');if(b){b.disabled=on;b.dataset.t=b.dataset.t||b.textContent;b.textContent=on?'Please wait…':b.dataset.t}};
 document.addEventListener('click',async e=>{const t=e.target.closest('[data-go],[data-g],[data-eye],[data-resend],[data-out]');if(!t||!$a('auth'))return;const d=t.dataset;
@@ -473,7 +485,7 @@ function rulesPage(){const sec=(i,c,t,it)=>`<div class="card rulec in" style="--
  +sec('⚖️','#ef4444','If rules are broken',['Anyone can report a post or comment from its ⋮ menu.','If 7 different members report a post or comment, it is hidden automatically until a moderator reviews it.','Moderators can hide or delete content and restrict accounts.','Restricted accounts can read but cannot post, comment or react.'])
  +`<button class="btn full" data-a="v" data-k="${PV||'home'}">Got it 👍</button>`}
 function view(){
- if(!ready)return'<div class="card sk"></div><div class="card sk"></div><div class="card sk"></div>';
+ if(!ready)return'';
  const ban=banned()?'<div class="ann warn">⛔ <div><b>Your account is restricted.</b><br>You can read the community but cannot post, comment or react.</div></div>':'';
  if(V==='home'){let l=vis();l=tab==='latest'?l.sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0)||b.ts-a.ts):tab==='trending'?l.sort((a,b)=>score(b)-score(a)):l.sort((a,b)=>cmOf(b.id).length-cmOf(a.id).length||b.ts-a.ts);const an=ST().announce,tot=l.length;l=l.slice(0,FL);
   return`${hero()}${ban}${an?`<div class="ann">📣 <div>${esc(an)}</div></div>`:''}${iosTip(true)}<button class="prompt" data-a="new">${avatar({id:me,anon:true})}<span style="min-width:0">What's on your mind, ${esc((PU.name||'friend').split(' ')[0])}?</span><span class="pill">+ Confess</span></button>
@@ -596,10 +608,10 @@ if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.se
 (document.fonts&&document.fonts.ready&&document.fonts.ready.then(()=>{const b=$('#bub');if(b)b._l=undefined;placeBub()}));(()=>{let ly=scrollY,tk=false;addEventListener('scroll',()=>{if(tk)return;tk=true;requestAnimationFrame(()=>{const y=scrollY,f=$('#fab');if(f){if(y>ly+6&&y>120)f.classList.add('mini');else if(y<ly-6||y<80)f.classList.remove('mini')}ly=y;tk=false})},{passive:true})})();setInterval(()=>{ready&&render({bg:true})},20000);addEventListener('offline',()=>toast('You are offline',1));addEventListener('online',()=>toast('Back online'));
 (async()=>{try{
  db=await claude.use('db');const user=await claude.use('user');
- if(!db||!user){$('#main').innerHTML=empty('🔒','Sign in to continue','',false);return}
+ if(!db||!user){$('#main').innerHTML=empty('🔒','Sign in to continue','',false);window.splashReady&&window.splashReady();return}
  me=await user.id();PU=user;admin=!!(user.canEdit&&user.canEdit());
  if(admin&&claude.getCode)claude.getCode().then(c=>{ACODE=c;render()}).catch(()=>{ACODE=null;render()});
- NAMES.forEach(n=>col(n).onSnapshot(s=>{if(busyW>0)return;S[n]=s.docs.map(d=>({id:d.id,...d.data()}));if(n==='nt')checkNew();loaded.add(n);if(loaded.size===NAMES.length){ready=true;if(!cleaned){cleaned=true;setTimeout(()=>cleanup().catch(()=>0),2000)}}render({bg:true})},e=>{if(!ready)$('#main').innerHTML=empty('⚠️','Could not load data',esc(e.message),false);else if(Date.now()-lastErr>20000){lastErr=Date.now();toast('Connection problem. Retrying…',1)}}));
+ NAMES.forEach(n=>col(n).onSnapshot(s=>{if(busyW>0)return;S[n]=s.docs.map(d=>({id:d.id,...d.data()}));if(n==='nt')checkNew();loaded.add(n);if(loaded.size===NAMES.length){ready=true;setTimeout(()=>window.splashReady&&window.splashReady(),0);if(!cleaned){cleaned=true;setTimeout(()=>cleanup().catch(()=>0),2000)}}render({bg:true})},e=>{if(!ready){$('#main').innerHTML=empty('⚠️','Could not load data',esc(e.message),false);window.splashReady&&window.splashReady()}else if(Date.now()-lastErr>20000){lastErr=Date.now();toast('Connection problem. Retrying…',1)}}));
  col('us').doc(me).get().then(s=>{if(!s.exists)col('us').doc(me).set({ts:Date.now(),banned:false})}).catch(()=>0);
-}catch(e){$('#main').innerHTML=empty('⚠️','Something went wrong',esc(e.message||e),false)}})();
+}catch(e){$('#main').innerHTML=empty('⚠️','Something went wrong',esc(e.message||e),false);window.splashReady&&window.splashReady()}})();
 </script></body></html>
